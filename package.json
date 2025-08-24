@@ -34,3 +34,7 @@
     "typescript": "5.5.3"
   }
 }
+"scripts": {
+  "postinstall": "prisma generate"
+}
+
