@@ -1,84 +1,41 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "sqlite"; url = env("DATABASE_URL") }
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // easiest for localhost & Netlify
+  url      = "file:./dev.db"
+}
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  name          String?
-  password      String
-  createdAt     DateTime       @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  tasks         Task[]
-  studySessions StudySession[]
-  examDates     ExamDate[]
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  tasks     Task[]
+  createdAt DateTime @default(now())
 }
 
 model Task {
-  id          String       @id @default(cuid())
-  userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  title       String
-  description String?
-  status      TaskStatus   @default(TODO)
-  priority    TaskPriority @default(NORMAL)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  sessions    StudySession[]
-}
-
-model StudySession {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  taskId    String?
-  task      Task?    @relation(fields: [taskId], references: [id])
-  start     DateTime
-  end       DateTime?
-  duration  Int?     // seconds
-  createdAt DateTime @default(now())
-}
-
-model ExamDate {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
   title     String
-  date      DateTime
+  duration  Int      // in minutes (study timer)
+  completed Boolean  @default(false)
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  exam      Exam?    @relation(fields: [examId], references: [id])
+  examId    Int?
   createdAt DateTime @default(now())
 }
 
-enum TaskStatus { TODO IN_PROGRESS DONE }
-enum TaskPriority { LOW NORMAL HIGH }
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@unique([provider, providerAccountId])
+model Exam {
+  id        Int      @id @default(autoincrement())
+  name      String
+  date      DateTime
+  tasks     Task[]
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  createdAt DateTime @default(now())
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  @@unique([identifier, token])
-}
