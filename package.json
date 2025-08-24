@@ -1,0 +1,36 @@
+{
+  "name": "inflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "5.17.0",
+    "@auth/prisma-adapter": "1.6.0",
+    "bcryptjs": "2.4.3",
+    "clsx": "2.1.1",
+    "date-fns": "3.6.0",
+    "next": "14.2.8",
+    "next-auth": "5.0.0-beta.20",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "20.11.30",
+    "@types/react": "18.2.66",
+    "@types/react-dom": "18.2.22",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.47",
+    "prisma": "5.17.0",
+    "tailwindcss": "3.4.10",
+    "tsx": "4.19.1",
+    "typescript": "5.5.3"
+  }
+}
